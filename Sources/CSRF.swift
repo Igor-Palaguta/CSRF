@@ -5,12 +5,12 @@ import Node
 import JSON
 import Crypto
 
-public typealias TokenRetrievalHandler = ((Request) throws -> String)!
+public typealias TokenRetrievalHandler = (Request) throws -> String
 
 /// Middleware to protect against cross-site request forgery attacks.
 public struct CSRF: Middleware {
     private let ignoredMethods: HTTPMethod
-    private var tokenRetrieval: TokenRetrievalHandler
+    private var tokenRetrieval: TokenRetrievalHandler!
     private let hasher = CryptoHasher(hash: .md5, encoding: .hex)
     
     /// Creates an instance of CSRF middleware to protect against this sort of attack.
@@ -18,7 +18,7 @@ public struct CSRF: Middleware {
     /// - parameter tokenRetrieval: How should this type retrieve the CSRF token? Pass nothing if you would like the default retrieval behavior.
     /// - note: See `CSRF.defaultTokenRetrieval(from:)` for the default retrieval mechanism.
     public init(ignoredMethods: HTTPMethod = [.GET, .HEAD, .OPTIONS],
-         tokenRetrieval: TokenRetrievalHandler = nil) {
+         tokenRetrieval: TokenRetrievalHandler? = nil) {
         self.ignoredMethods = ignoredMethods
         self.tokenRetrieval = tokenRetrieval ?? defaultTokenRetrieval
     }
